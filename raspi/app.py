@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 # MQTT settings
 mqtt_server = "127.0.0.1"
-mqtt_topic = "arduino/jannesiscool"
+mqtt_topic = "topic"
  
 # MQTT callback functions
 def on_connect(client, userdata, flags, rc, properties):
