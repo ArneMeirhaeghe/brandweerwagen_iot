@@ -8,35 +8,16 @@
 </head>
 
 <body>
-    <h1>Messages from arduino</h1>
+   <button id="vooruit">vooruit</button>
+    <button id="achteruit">achteruit</button>
+    <button id="links">links</button>
+    <button id="rechts">rechts</button>
+    <button id="stop">stop</button>
+    <button id="sirene">sirene</button>
 
-    <ul id="messages">
-        <li>{{ message }}</li>
-    </ul>
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-    <script>
-        const host = window.location.host;
-        const port = 9001;
-        const messages = document.getElementById("messages");
-        const client = mqtt.connect(`mqtt://${host}:${port}`);
-
-        client.on("connect", () => {
-            client.subscribe("arduino/jannesiscool", (err) => {
-                if (!err) {
-                    client.publish("presence", "Hello mqtt");
-                }
-            });
-        });
-
-        client.on("message", (topic, message) => {
-            const msg = message.toString();
-            const time = new Date().toLocaleTimeString();
-            const li = document.createElement("li");
-            li.textContent = `${time} - ${msg}`;
-            messages.prepend(li);
-        });
-
-    </script>
+   
+    <script src="../static/js/app.js"></script>
 </body>
 
 </html>
