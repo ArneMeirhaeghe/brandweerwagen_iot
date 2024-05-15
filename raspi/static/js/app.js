@@ -31,33 +31,33 @@
 
 
     vooruit.addEventListener("click", function() {
-        client.publish("topic", "vooruit");
+        client.publish("topic", "motor/vooruit");                     // dit veranderen naar json action: "motor" en value: "vooruit"
         console.log("Vooruit");
     }
     );
 
     achteruit.addEventListener("click", function() {
-        client.publish("topic", "achteruit");
+        client.publish("topic", "motor/achteruit");
         console.log("Achteruit");
     }
     );
     links.addEventListener("click", function() {
-        client.publish("topic", "links");
+        client.publish("topic", "motor/links");
         console.log("Links");
     }
     );
     rechts.addEventListener("click", function() {
-        client.publish("topic", "rechts");
+        client.publish("topic", "motor/rechts");
         console.log("Rechts");
     }
     );
     stopp.addEventListener("click", function() {
-        client.publish("topic", "stop");
+        client.publish("topic", "motor/stop");
         console.log("Stop");
     }
     );
     sirene.addEventListener("click", function() {
-        client.publish("topic", "sirene");
+        client.publish("topic", "motor/sirene");
         console.log("Sirene");
     }
     );
