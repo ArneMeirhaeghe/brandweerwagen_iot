@@ -1,9 +1,9 @@
 #include <ArduinoMqttClient.h>
 #include <WiFiS3.h>
 #include "wifiSecret.h" // you need to create this file with your own network credentials (in .gitignore)
- #include <Servo.h> 
+#include <Servo.h>
 
- Servo myservo;
+Servo servo;  // create servo object to control a servo
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
@@ -24,8 +24,6 @@ int R5 = 5;  // --> relay 5
 int R1 = 6;  // pomp --> relay 1
 int zoemer =7;
 int controle =8;
-int servo = 9;
-
 void setup() {
   //Initialize serial and wait for port to open:
   Serial.begin(9600);
@@ -36,7 +34,8 @@ void setup() {
   pinMode(R1, OUTPUT);
   pinMode(zoemer, OUTPUT);
   pinMode(controle,OUTPUT);
-  myservo.attach(servo);
+  servo.attach(9);  // attaches the servo on pin 9 to the servo objectư
+  servo.write(90);
   while (!Serial) {
   }
   // attempt to connect to Wifi network:
@@ -132,7 +131,7 @@ void onMqttMessage(int messageSize) {
     Serial.print("Extracted Int Value: ");
     Serial.println(extractedIntValue);
 
-    myservo.write(extractedIntValue);
+    servo.write(extractedIntValue);
 
 
 
