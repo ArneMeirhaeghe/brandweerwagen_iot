@@ -27,8 +27,9 @@
     const rechts = document.getElementById("rechts");
     const stopp = document.getElementById("stop");
     const sirene = document.getElementById("sirene");
-
-
+    const servoInput = document.getElementById("servoinput");
+    const servoValueDisplay = document.getElementById("servoValueDisplay");
+    
 
     vooruit.addEventListener("mousedown", function() {
         client.publish("topic", "motor/vooruit");                     
@@ -86,5 +87,13 @@
     }
     );
   
-
+    servoInput.addEventListener("input", function() {
+        const servoValue = parseInt(servoInput.value);
+        if (servoValue >= 0 && servoValue <= 180) {
+        client.publish("topic", `servo/${servoValue}`);
+        console.log(servoValue);
+        servoValueDisplay.textContent = servoValue;
+        }
+    }
+    );  
     
