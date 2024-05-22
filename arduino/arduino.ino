@@ -14,8 +14,8 @@ MqttClient mqttClient(wifiClient);
 const char broker[] = "192.168.50.160";
 int        port     = 1883;
 const char topic[]  = "topic";
-const char topic2[]  = "real_unique_topic_2";
-const char topic3[]  = "real_unique_topic_3";
+// const char topic2[]  = "real_unique_topic_2";
+// const char topic3[]  = "real_unique_topic_3";
 
 int R8 = 2;  // --> relay 8
 int R7 = 3;  // --> relay 7
@@ -75,18 +75,18 @@ void setup() {
 
   // subscribe to a topic
   mqttClient.subscribe(topic);
-  mqttClient.subscribe(topic2);
-  mqttClient.subscribe(topic3);
+  // mqttClient.subscribe(topic2);
+  // mqttClient.subscribe(topic3);
 
   // topics can be unsubscribed using:
   // mqttClient.unsubscribe(topic);
 
   Serial.print("Topic: ");
   Serial.println(topic);
-  Serial.print("Topic: ");
-  Serial.println(topic2);
-  Serial.print("Topic: ");
-  Serial.println(topic3);
+  // Serial.print("Topic: ");
+  // Serial.println(topic2);
+  // Serial.print("Topic: ");
+  // Serial.println(topic3);
 
   Serial.println();
 }
