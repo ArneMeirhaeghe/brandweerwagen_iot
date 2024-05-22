@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../static/css/style.css">
 </head>
 
 <body>
@@ -15,12 +16,13 @@
     <button id="stop">stop</button>
     <button id="sirene">sirene</button>
 
-    <input type="number" id="servoinput" name="servoinput" min="0" max="1023" />
-    <button onclick="servogo()">servo go</button>
-
+    <div>
+        <span id="servoValueDisplay">90</span>
+    </div>
+    <input type="range" id="servoinput" name="servoinput" min="0" max="180" step="10" value="90" />
+    
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <script src="../static/js/app.js"></script>
-
 </body>
 
 </html>
