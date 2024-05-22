@@ -30,37 +30,61 @@
 
 
 
-    vooruit.addEventListener("click", function() {
-        client.publish("topic", "motor/vooruit");                     // dit veranderen naar json action: "motor" en value: "vooruit"
+    vooruit.addEventListener("mousedown", function() {
+        client.publish("topic", "motor/vooruit");                     
         console.log("Vooruit");
     }
     );
+    vooruit.addEventListener("mouseup", function() {
+        client.publish("topic", "motor/stop");
+        console.log("Stop");
+    }
+    );
 
-    achteruit.addEventListener("click", function() {
+    achteruit.addEventListener("mousedown", function() {
         client.publish("topic", "motor/achteruit");
         console.log("Achteruit");
     }
     );
-    links.addEventListener("click", function() {
+    achteruit.addEventListener("mouseup", function() {
+        client.publish("topic", "motor/stop");
+        console.log("Stop");
+    }
+    );
+
+    links.addEventListener("mousedown", function() {
         client.publish("topic", "motor/links");
         console.log("Links");
     }
     );
-    rechts.addEventListener("click", function() {
+    links.addEventListener("mouseup", function() {
+        client.publish("topic", "motor/stop");
+        console.log("Stop");
+    }
+    );
+
+    rechts.addEventListener("mousedown", function() {
         client.publish("topic", "motor/rechts");
         console.log("Rechts");
     }
     );
+    rechts.addEventListener("mouseup", function() {
+        client.publish("topic", "motor/stop");
+        console.log("Stop");
+    }
+    );
+
     stopp.addEventListener("click", function() {
         client.publish("topic", "motor/stop");
         console.log("Stop");
     }
     );
+   
     sirene.addEventListener("click", function() {
         client.publish("topic", "motor/sirene");
-        console.log("Sirene");
+        console.log("Stop");
     }
     );
-
+  
 
     
