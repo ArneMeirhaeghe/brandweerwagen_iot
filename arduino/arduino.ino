@@ -159,6 +159,8 @@ void onMqttMessage(int messageSize) {
   } else if (extractedStringValue == "sirene") {
     Serial.println("Executing sirene");
     sirene();
+  }else if (extractedStringValue == "plant1") {
+    Serial.println("plant 1");
   }
   Serial.println();
 }
@@ -206,11 +208,12 @@ linksachteruit();
 }
 void links(){
  rechtsvooruit();
+ linksachteruit();
   Serial.println("links");
 }
 void rechts(){
 linksvooruit();
-
+rechtsachteruit();
   Serial.println("rechts");
 }
 void spuit(){
