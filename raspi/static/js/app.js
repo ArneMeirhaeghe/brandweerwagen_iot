@@ -14,8 +14,9 @@
     const servoValueDisplay = document.getElementById("servoValueDisplay");
     const servoValueDisplay2 = document.getElementById("servoValueDisplay2");
     const modeToggle = document.getElementById("modeToggle");
-    const check = "";
-
+    const ctx = document.getElementById('myChart');
+    let check = ""
+    let msg = 0;
 
   //mqtt read
   client.on("connect", () => {
@@ -26,19 +27,97 @@
     });
     
 });
+    //graph
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Initialiseer de Chart.js grafiek
+        if (modeToggle.checked) {
+            check = "auto";
+            console.log("Auto");
+           
+        }
+        else {
+            check = "manual";
+            console.log("Manual");
+        }
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const vochtigheidData = {
+            labels: [],  // Tijdstippen waarop de waarden gemeten worden
+            datasets: [{
+                label: 'Vochtigheid (%)',
+                data: [],  // Vochtigheidswaarden
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+    
+        const vochtigheidGrafiek = new Chart(ctx, {
+            type: 'line',
+            data: vochtigheidData,
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'minute'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Tijd'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Vochtigheid (%)'
+                        }
+                    }
+                }
+            }
+        });
+    
+        // Functie om nieuwe vochtigheidswaarde toe te voegen
+        function voegVochtigheidToe(waarde) {
+            const tijdstip = new Date();
+            vochtigheidGrafiek.data.labels.push(tijdstip);
+            vochtigheidGrafiek.data.datasets[0].data.push(waarde);
+            vochtigheidGrafiek.update();
+        }
+    
+        // // Simuleer het ontvangen van vochtigheidswaarden
+        // setInterval(() => {
+        //     const nieuweWaarde = Math.random() * 100;  // Simuleer een vochtigheidswaarde tussen 0 en 100
+        //     voegVochtigheidToe(nieuweWaarde);
+        // }, 2000);  // Elke 2 seconden een nieuwe waarde
 
- client.on("message", (topic, message) => {
-     if (topic === "real_unique_topic_2") {
-         const msg = parseInt(message.toString());
-        voegVochtigheidToe(msg);
-      
-   }
-});
+        client.on("message", (topic, message) => {
+            if (topic === "real_unique_topic_2") {
+                 msg = parseInt(message.toString());
+                voegVochtigheidToe(msg);
+
+                if(check=="auto" && msg <= 50) {
+                    client.publish("topic", "motor/plant1");
+                    console.log("auto + droog");
+                }else if(check=="auto" && msg > 50){
+                    console.log("auto + nat");
+                }else if(check=="manual" && msg <= 50){
+                    console.log("manual + droog");
+                }else if(check=="manual" && msg > 50){
+                    console.log("manual + nat");
+                }
+          }
+       });
+    });
+  
+
+ 
 
 modeToggle.addEventListener("change", function() {
     if (modeToggle.checked) {
         check = "auto";
         console.log("Auto");
+       
     }
     else {
         check = "manual";
@@ -46,14 +125,16 @@ modeToggle.addEventListener("change", function() {
     }
 });
 
-if(check == "auto"&& msg >= 0 && msg <= 50) {
-    console.log("droog");
-    client.publish("topic", "motor/plant1");
 
-}else{
-    console.log(check);
-    console.log("nat");
-}
+
+// if( msg >= 0 && msg <= 50) {
+//     console.log("droog");
+//     client.publish("topic", "motor/plant1");
+
+// }else{
+//     console.log(check);
+//     console.log("nat");
+// }
 
 //      modeToggle.addEventListener("change", function() {
 //     if (modeToggle.checked) {
@@ -155,8 +236,6 @@ if(check == "auto"&& msg >= 0 && msg <= 50) {
     );  
     
    
-
-  
     
    
 
