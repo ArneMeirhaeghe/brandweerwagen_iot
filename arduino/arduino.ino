@@ -208,15 +208,11 @@ linksachteruit();
 void links(){
  rechtsvooruit();
   Serial.println("links");
-   delay(5000);
-    stop();
 }
 void rechts(){
 linksvooruit();
 
   Serial.println("rechts");
-  delay(5000);
- stop();
 }
 void spuit(){
   digitalWrite(R1, HIGH);
