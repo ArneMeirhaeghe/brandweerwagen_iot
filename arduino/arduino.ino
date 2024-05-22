@@ -1,7 +1,9 @@
 #include <ArduinoMqttClient.h>
 #include <WiFiS3.h>
 #include "wifiSecret.h" // you need to create this file with your own network credentials (in .gitignore)
- 
+ #include <Servo.h> 
+
+ Servo myservo;
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
@@ -15,32 +17,32 @@ const char topic[]  = "topic";
 const char topic2[]  = "real_unique_topic_2";
 const char topic3[]  = "real_unique_topic_3";
 
-int R1 = 2;
-int R2 = 3;
-int R3 = 4;
-int R4 = 5;
-int R5 = 6;
+int R8 = 2;  // --> relay 8
+int R7 = 3;  // --> relay 7
+int R6 = 4;  // --> relay 6
+int R5 = 5;  // --> relay 5
+int R1 = 6;  // pomp --> relay 1
 int zoemer =7;
 int controle =8;
+int servo = 9;
 
 void setup() {
   //Initialize serial and wait for port to open:
   Serial.begin(9600);
-   pinMode(R1, OUTPUT);
-  pinMode(R2, OUTPUT);
-  pinMode(R3, OUTPUT);
-  pinMode(R4, OUTPUT);
+   pinMode(R8, OUTPUT);
+  pinMode(R7, OUTPUT);
+  pinMode(R6, OUTPUT);
   pinMode(R5, OUTPUT);
+  pinMode(R1, OUTPUT);
   pinMode(zoemer, OUTPUT);
   pinMode(controle,OUTPUT);
+  myservo.attach(servo);
   while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
   }
   // attempt to connect to Wifi network:
   Serial.print("Attempting to connect to SSID: ");
   Serial.println(ssid);
   while (WiFi.begin(ssid, pass) != WL_CONNECTED) {
-    // failed, retry
     Serial.print(".");
     delay(5000);
   }
@@ -113,58 +115,84 @@ void onMqttMessage(int messageSize) {
     messageContent += c;  // Append the character to our message content string
   }
 
+
+
   // Print the full message content
   Serial.println(messageContent);
+  // Extract the relevant part of the message
+  int separatorIndex = messageContent.indexOf('/');
+  String prefix = messageContent.substring(0, separatorIndex);
+  String value = messageContent.substring(separatorIndex + 1);
 
-  // Compare the received message to "1"
-  if (messageContent == "vooruit") {
-    Serial.println("vooruit");
+  int extractedIntValue = 0;
+  String extractedStringValue = "";
+
+   if (prefix == "servo") {
+    extractedIntValue = value.toInt();
+    Serial.print("Extracted Int Value: ");
+    Serial.println(extractedIntValue);
+
+    myservo.write(extractedIntValue);
+
+
+
+  } else if (prefix == "motor") {
+    extractedStringValue = value;
+    Serial.print("Extracted String Value: ");
+    Serial.println(extractedStringValue);
+
+
+    if (extractedStringValue == "vooruit") {
+    Serial.println("Executing vooruit");
     vooruit();
-  }else if(messageContent == "achteruit"){
-    Serial.println("achteruit");
+  } else if (extractedStringValue == "achteruit") {
+    Serial.println("Executing achteruit");
     achteruit();
-  }else if(messageContent == "links"){
-    Serial.println("links");
+  } else if (extractedStringValue == "links") {
+    Serial.println("Executing links");
     links();
-  }else if(messageContent == "rechts"){
-    Serial.println("rechts");
+  } else if (extractedStringValue == "rechts") {
+    Serial.println("Executing rechts");
     rechts();
-  }else if(messageContent == "stop"){
-    Serial.println("stop");
+  } else if (extractedStringValue == "stop") {
+    Serial.println("Executing stop");
     stop();
-  }else if(messageContent == "sirene"){
-    Serial.println("sirene");
+  } else if (extractedStringValue == "sirene") {
+    Serial.println("Executing sirene");
     sirene();
   }
-
-  Serial.println(); // Print a newline for better separation of messages
+  Serial.println();
 }
-void linksvooruit(){
-  digitalWrite(R1, HIGH); 
-  digitalWrite(R2, LOW);
+  }
+
+
+
+void linksachteruit(){
+  digitalWrite(R8, HIGH); 
+  digitalWrite(R7, LOW);
   //    digitalWrite(R3, LOW);  
   //  digitalWrite(R4, LOW);  
 
 }
-void rechtsvooruit(){
-  digitalWrite(R3, LOW);
-  digitalWrite(R4, HIGH);
-}
 void rechtsachteruit(){
-digitalWrite(R3, HIGH);
-  digitalWrite(R4, LOW);
+  digitalWrite(R6, LOW);
+  digitalWrite(R5, HIGH);
 }
-void linksachteruit(){
-     digitalWrite(R1, LOW);  
-  digitalWrite(R2, HIGH);
+void rechtsvooruit(){
+digitalWrite(R6, HIGH);
+  digitalWrite(R5, LOW);
+}
+void linksvooruit(){
+     digitalWrite(R8, LOW);  
+  digitalWrite(R7, HIGH);
 }
 
  
 void stop() {
-  digitalWrite(R1, LOW); 
-  digitalWrite(R2, LOW);
-  digitalWrite(R3, LOW);
-  digitalWrite(R4, LOW);
+  digitalWrite(R8, LOW); 
+  digitalWrite(R7, LOW);
+  digitalWrite(R6, LOW);
+  digitalWrite(R5, LOW);
   Serial.println("STOP");
 }
 void vooruit() {
@@ -178,7 +206,6 @@ linksachteruit();
   Serial.println("achteruit");
 }
 void links(){
- linksachteruit();
  rechtsvooruit();
   Serial.println("links");
    delay(5000);
@@ -186,15 +213,15 @@ void links(){
 }
 void rechts(){
 linksvooruit();
-rechtsachteruit();
+
   Serial.println("rechts");
   delay(5000);
  stop();
 }
 void spuit(){
-  digitalWrite(R5, HIGH);
+  digitalWrite(R1, HIGH);
   delay(2000);
-  digitalWrite(R5, LOW);
+  digitalWrite(R1, LOW);
   Serial.println("spuit");
 }
 void sirene(){
