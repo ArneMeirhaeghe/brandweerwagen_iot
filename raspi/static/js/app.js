@@ -17,6 +17,7 @@
     const ctx = document.getElementById('myChart');
     let check = ""
     let msg = 0;
+    const controls = document.getElementById("controls");
 
   //mqtt read
   client.on("connect", () => {
@@ -30,15 +31,7 @@
     //graph
     document.addEventListener('DOMContentLoaded', (event) => {
         // Initialiseer de Chart.js grafiek
-        if (modeToggle.checked) {
-            check = "auto";
-            console.log("Auto");
-           
-        }
-        else {
-            check = "manual";
-            console.log("Manual");
-        }
+        toggleCheck();
         const ctx = document.getElementById('myChart').getContext('2d');
         const vochtigheidData = {
             labels: [],  // Tijdstippen waarop de waarden gemeten worden
@@ -99,6 +92,7 @@
                 if(check=="auto" && msg <= 50) {
                     client.publish("topic", "motor/plant1");
                     console.log("auto + droog");
+                    
                 }else if(check=="auto" && msg > 50){
                     console.log("auto + nat");
                 }else if(check=="manual" && msg <= 50){
@@ -114,15 +108,7 @@
  
 
 modeToggle.addEventListener("change", function() {
-    if (modeToggle.checked) {
-        check = "auto";
-        console.log("Auto");
-       
-    }
-    else {
-        check = "manual";
-        console.log("Manual");
-    }
+    toggleCheck();
 });
 
 
@@ -158,51 +144,87 @@ modeToggle.addEventListener("change", function() {
 //     }
 // });
   
+    var mcVooruit = new Hammer(vooruit);
+    var mcAchteruit = new Hammer(achteruit);
+    var mcLinks = new Hammer(links);
+    var mcRechts = new Hammer(rechts);
 
-    //mqtt write
-    vooruit.addEventListener("mousedown", function() {
+
+  function vooruitf() {
         client.publish("topic", "motor/vooruit");                     
         console.log("Vooruit");
     }
-    );
-    vooruit.addEventListener("mouseup", function() {
+
+    function stopf() {
         client.publish("topic", "motor/stop");
         console.log("Stop");
     }
-    );
-
-    achteruit.addEventListener("mousedown", function() {
+    function achteruitf() {
         client.publish("topic", "motor/achteruit");
         console.log("Achteruit");
     }
-    );
-    achteruit.addEventListener("mouseup", function() {
-        client.publish("topic", "motor/stop");
-        console.log("Stop");
-    }
-    );
-
-    links.addEventListener("mousedown", function() {
+    function linksf() {
         client.publish("topic", "motor/links");
         console.log("Links");
     }
-    );
-    links.addEventListener("mouseup", function() {
-        client.publish("topic", "motor/stop");
-        console.log("Stop");
-    }
-    );
-
-    rechts.addEventListener("mousedown", function() {
+    function rechtsf() {
         client.publish("topic", "motor/rechts");
         console.log("Rechts");
     }
-    );
-    rechts.addEventListener("mouseup", function() {
-        client.publish("topic", "motor/stop");
-        console.log("Stop");
-    }
-    );
+
+    //mqtt write
+    vooruit.addEventListener("mousedown", vooruitf);
+    vooruit.addEventListener("mouseup", stopf);
+    mcVooruit.on("press", vooruitf);
+    mcVooruit.on("pressup", stopf);
+    achteruit.addEventListener("mousedown", achteruitf);
+    achteruit.addEventListener("mouseup", stopf);
+    mcAchteruit.on("press", achteruitf);
+    mcAchteruit.on("pressup", stopf);
+    links.addEventListener("mousedown", linksf);
+    links.addEventListener("mouseup", stopf);
+    mcLinks.on("press", linksf);
+    mcLinks.on("pressup", stopf);
+    rechts.addEventListener("mousedown", rechtsf);
+    rechts.addEventListener("mouseup", stopf);
+    mcRechts.on("press", rechtsf);
+    mcRechts.on("pressup", stopf);
+
+
+
+    
+   
+    // achteruit.addEventListener("mouseup", function() {
+    //     client.publish("topic", "motor/stop");
+    //     console.log("Stop");
+    // }
+    // );
+    // function achteruitf() {
+    //     client.publish("topic", "motor/achteruit");
+    //     console.log("Achteruit");
+    // }
+
+    // links.addEventListener("mousedown", function() {
+    //     client.publish("topic", "motor/links");
+    //     console.log("Links");
+    // }
+    // );
+    // links.addEventListener("mouseup", function() {
+    //     client.publish("topic", "motor/stop");
+    //     console.log("Stop");
+    // }
+    // );
+
+    // rechts.addEventListener("mousedown", function() {
+    //     client.publish("topic", "motor/rechts");
+    //     console.log("Rechts");
+    // }
+    // );
+    // rechts.addEventListener("mouseup", function() {
+    //     client.publish("topic", "motor/stop");
+    //     console.log("Stop");
+    // }
+    // );
 
     stopp.addEventListener("click", function() {
         client.publish("topic", "motor/stop");
@@ -235,6 +257,19 @@ modeToggle.addEventListener("change", function() {
 
     );  
     
+    function toggleCheck() {
+        if (modeToggle.checked) {
+            check = "auto";
+            console.log("Auto");
+            controls.classList.add("hidden");
+           
+        }
+        else {
+            check = "manual";
+            console.log("Manual");
+            controls.classList.remove("hidden");
+        }
+    }
    
     
    
