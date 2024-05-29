@@ -14,8 +14,8 @@
     <div class="toggle-container">
         <input type="checkbox" id="modeToggle" class="toggle-button">
         <label for="modeToggle" class="toggle-label">
-            <span class="toggle-button-text"value="auto">Auto</span>
-            <span class="toggle-button-text"value="manual">Manual</span>
+            <span class="toggle-button-text" value="auto">Auto</span>
+            <span class="toggle-button-text" value="manual">Manual</span>
         </label>
     </div>
     <div class="container" id="controls">
@@ -37,12 +37,18 @@
         </div>
         <div class="mini__container">
             <span id="servoValueDisplay2">90</span>
-            <input type="range" id="servoinput2" name="servoinput2" min="0" max="180" step="10" value="90" class="vertical-slider" />
+            <input type="range" id="servoinput2" name="servoinput2" min="0" max="180" step="10" value="90"
+                class="vertical-slider" />
         </div>
     </div>
+    <div class="mini__container">
+        <button id="startOpnemen">Opnemen Starten</button>
+        <button id="stopOpnemen" class="hidden">Opnemen Stoppen</button>
+        <button id="uitvoeren">Route Uitvoeren</button>
+    </div>
     <div class="chart">
-        <canvas id="myChart" ></canvas>
-    </div>    
+        <canvas id="myChart"></canvas>
+    </div>
     <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <script src="../static/js/app.js"></script>
