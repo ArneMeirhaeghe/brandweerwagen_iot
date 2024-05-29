@@ -14,8 +14,8 @@
     <div class="toggle-container">
         <input type="checkbox" id="modeToggle" class="toggle-button">
         <label for="modeToggle" class="toggle-label">
-            <span class="toggle-button-text"value="auto">Auto</span>
-            <span class="toggle-button-text"value="manual">Manual</span>
+            <span class="toggle-button-text" value="auto">Auto</span>
+            <span class="toggle-button-text" value="manual">Manual</span>
         </label>
     </div>
     <div class="container" id="controls">
@@ -43,11 +43,14 @@
     <div class="mini__container">
         <button id="startOpnemen">Opnemen Starten</button>
         <button id="stopOpnemen" class="hidden">Opnemen Stoppen</button>
-        <button id="uitvoeren">Route Uitvoeren</button>
+    </div>
+    <div class="container">
+        <h3>Auto Routes</h3>
+        <div id="savedRoutesContainer" class="mini__container"></div>
     </div>
     <div class="chart">
-        <canvas id="myChart" ></canvas>
-    </div>    
+        <canvas id="myChart"></canvas>
+    </div>
     <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <script src="../static/js/app.js"></script>

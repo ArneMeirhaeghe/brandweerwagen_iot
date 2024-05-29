@@ -1,4 +1,3 @@
-
 const host = window.location.host;
 const port = 9001;
 const client = mqtt.connect(`mqtt://${host}:${port}`);
@@ -15,16 +14,17 @@ const servoValueDisplay = document.getElementById("servoValueDisplay");
 const servoValueDisplay2 = document.getElementById("servoValueDisplay2");
 const modeToggle = document.getElementById("modeToggle");
 const ctx = document.getElementById('myChart');
+const startOpnemen = document.getElementById("startOpnemen");
+const stopOpnemen = document.getElementById("stopOpnemen");
+const savedRoutesContainer = document.getElementById("savedRoutesContainer");
+
 let check = "";
 let msg = 0;
 const controls = document.getElementById("controls");
-
-const startOpnemen = document.getElementById("startOpnemen");
-const stopOpnemen = document.getElementById("stopOpnemen");
-const uitvoeren = document.getElementById("uitvoeren");
 let isOpnemen = false;
 let route = [];
 let lastAction = null;
+let routeName = "";
 
 // MQTT Connect
 client.on("connect", () => {
@@ -88,27 +88,33 @@ document.addEventListener('DOMContentLoaded', (event) => {
             msg = parseInt(message.toString());
             voegVochtigheidToe(msg);
 
-            if(check == "auto" && msg <= 50) {
+            if (check == "auto" && msg <= 50) {
                 client.publish("topic", "motor/plant1");
                 console.log("auto + droog");
-            } else if(check == "auto" && msg > 50) {
+            } else if (check == "auto" && msg > 50) {
                 console.log("auto + nat");
-            } else if(check == "manual" && msg <= 50) {
+            } else if (check == "manual" && msg <= 50) {
                 console.log("manual + droog");
-            } else if(check == "manual" && msg > 50) {
+            } else if (check == "manual" && msg > 50) {
                 console.log("manual + nat");
             }
         }
     });
+
+    loadSavedRoutes();
 });
 
 modeToggle.addEventListener("change", function() {
     toggleCheck();
 });
 
-startOpnemen.addEventListener("click", startRouteOpnemen);
+startOpnemen.addEventListener("click", () => {
+    routeName = prompt("Geef een naam voor de route:");
+    if (routeName) {
+        startRouteOpnemen();
+    }
+});
 stopOpnemen.addEventListener("click", stopRouteOpnemen);
-uitvoeren.addEventListener("click", routeUitvoeren);
 
 function startRouteOpnemen() {
     isOpnemen = true;
@@ -123,6 +129,9 @@ function stopRouteOpnemen() {
     isOpnemen = false;
     startOpnemen.classList.remove("hidden");
     stopOpnemen.classList.add("hidden");
+    if (routeName) {
+        saveRoute(routeName, route);
+    }
     console.log("Opnemen gestopt");
     console.log("Opgenomen route:", route);
 }
@@ -135,7 +144,7 @@ function recordAction(action) {
     }
 }
 
-function routeUitvoeren() {
+function routeUitvoeren(route) {
     if (route.length === 0) {
         console.log("Geen route opgenomen");
         return;
@@ -182,6 +191,52 @@ function routeUitvoeren() {
     }
 
     executeNextAction();
+}
+
+function saveRoute(name, data) {
+    const routes = JSON.parse(localStorage.getItem("routes")) || [];
+    const existingRouteIndex = routes.findIndex(route => route.name === name);
+    if (existingRouteIndex !== -1) {
+        routes[existingRouteIndex].data = data;
+    } else {
+        routes.push({ name, data });
+    }
+    localStorage.setItem("routes", JSON.stringify(routes));
+    window.location.reload(); // Reload the page to show the new route button
+}
+
+function loadSavedRoutes() {
+    const routes = JSON.parse(localStorage.getItem("routes")) || [];
+    savedRoutesContainer.innerHTML = '';
+    routes.forEach(route => {
+        const routeContainer = document.createElement('div');
+        routeContainer.classList.add('route-container');
+        
+        const button = document.createElement('button');
+        button.textContent = route.name;
+        button.addEventListener('click', () => routeUitvoeren(route.data));
+
+        const editButton = document.createElement('button');
+        editButton.textContent = "Bewerken";
+        editButton.addEventListener('click', () => editRoute(route.name));
+
+        routeContainer.appendChild(button);
+        routeContainer.appendChild(editButton);
+        savedRoutesContainer.appendChild(routeContainer);
+    });
+}
+
+function editRoute(name) {
+    const routes = JSON.parse(localStorage.getItem("routes")) || [];
+    const route = routes.find(route => route.name === name);
+    if (route) {
+        routeName = name;
+        route.data = [];
+        isOpnemen = true;
+        startOpnemen.classList.add("hidden");
+        stopOpnemen.classList.remove("hidden");
+        console.log(`Opnemen gestart voor route: ${name}`);
+    }
 }
 
 var mcVooruit = new Hammer(vooruit);
