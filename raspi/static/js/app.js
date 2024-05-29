@@ -214,10 +214,12 @@ function loadSavedRoutes() {
         
         const button = document.createElement('button');
         button.textContent = route.name;
+        button.classList.add('route-button');  // Class toegevoegd
         button.addEventListener('click', () => routeUitvoeren(route.data));
 
         const editButton = document.createElement('button');
         editButton.textContent = "Bewerken";
+        editButton.classList.add('editbutton');  // Class toegevoegd
         editButton.addEventListener('click', () => editRoute(route.name));
 
         routeContainer.appendChild(button);
@@ -225,6 +227,7 @@ function loadSavedRoutes() {
         savedRoutesContainer.appendChild(routeContainer);
     });
 }
+
 
 function editRoute(name) {
     const routes = JSON.parse(localStorage.getItem("routes")) || [];
