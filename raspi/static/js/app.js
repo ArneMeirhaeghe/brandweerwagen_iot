@@ -3,21 +3,30 @@
     const port = 9001;
     const client = mqtt.connect(`mqtt://${host}:${port}`);
 
-    const vooruit = document.getElementById("vooruit");
-    const achteruit = document.getElementById("achteruit");
-    const links = document.getElementById("links");
-    const rechts = document.getElementById("rechts");
-    const stopp = document.getElementById("stop");
-    const sirene = document.getElementById("sirene");
-    const servoInput = document.getElementById("servoinput");
-    const servoInput2 = document.getElementById("servoinput2");
-    const servoValueDisplay = document.getElementById("servoValueDisplay");
-    const servoValueDisplay2 = document.getElementById("servoValueDisplay2");
-    const modeToggle = document.getElementById("modeToggle");
-    const ctx = document.getElementById('myChart');
-    let check = ""
-    let msg = 0;
-    const controls = document.getElementById("controls");
+const vooruit = document.getElementById("vooruit");
+const achteruit = document.getElementById("achteruit");
+const links = document.getElementById("links");
+const rechts = document.getElementById("rechts");
+const stopp = document.getElementById("stop");
+const sirene = document.getElementById("sirene");
+const water = document.getElementById("water");
+const servoInput = document.getElementById("servoinput");
+const servoInput2 = document.getElementById("servoinput2");
+const servoValueDisplay = document.getElementById("servoValueDisplay");
+const servoValueDisplay2 = document.getElementById("servoValueDisplay2");
+const modeToggle = document.getElementById("modeToggle");
+const ctx = document.getElementById('myChart');
+const startOpnemen = document.getElementById("startOpnemen");
+const stopOpnemen = document.getElementById("stopOpnemen");
+const savedRoutesContainer = document.getElementById("savedRoutesContainer");
+
+let check = "";
+let msg = 0;
+const controls = document.getElementById("controls");
+let isOpnemen = false;
+let route = [];
+let lastAction = null;
+let routeName = "";
 
   //mqtt read
   client.on("connect", () => {
@@ -111,44 +120,145 @@ modeToggle.addEventListener("change", function() {
     toggleCheck();
 });
 
+startOpnemen.addEventListener("click", () => {
+    routeName = prompt("Geef een naam voor de route:");
+    if (routeName) {
+        startRouteOpnemen();
+    }
+});
+stopOpnemen.addEventListener("click", stopRouteOpnemen);
+
+function startRouteOpnemen() {
+    isOpnemen = true;
+    route = [];
+    lastAction = null; // Reset last action when starting a new recording
+    startOpnemen.classList.add("hidden");
+    stopOpnemen.classList.remove("hidden");
+    console.log("Opnemen gestart");
+}
+
+function stopRouteOpnemen() {
+    isOpnemen = false;
+    startOpnemen.classList.remove("hidden");
+    stopOpnemen.classList.add("hidden");
+    if (routeName) {
+        saveRoute(routeName, route);
+    }
+    console.log("Opnemen gestopt");
+    console.log("Opgenomen route:", route);
+}
+
+function recordAction(action) {
+    if (isOpnemen && action !== lastAction) {
+        const timestamp = new Date().getTime();
+        route.push({ action, timestamp });
+        lastAction = action;
+    }
+}
+
+function routeUitvoeren(route) {
+    if (route.length === 0) {
+        console.log("Geen route opgenomen");
+        return;
+    }
+    console.log("Uitvoeren van route:", route);
+
+    let index = 0;
+
+    function executeNextAction() {
+        if (index < route.length) {
+            const { action, timestamp } = route[index];
+            console.log("Uitvoeren actie:", action);
+
+            switch (action) {
+                case "vooruit":
+                    vooruitf();
+                    break;
+                case "achteruit":
+                    achteruitf();
+                    break;
+                case "links":
+                    linksf();
+                    break;
+                case "rechts":
+                    rechtsf();
+                    break;
+                case "stop":
+                    stopf();
+                    break;
+                case "sirene":
+                    sirene.click();
+                    break;
+            }
+
+            index++;
+            if (index < route.length) {
+                const nextTimestamp = route[index].timestamp;
+                const delay = nextTimestamp - timestamp;
+                setTimeout(executeNextAction, delay);
+            } else {
+                console.log("Route voltooid");
+            }
+        }
+    }
+
+    executeNextAction();
+}
+
+function saveRoute(name, data) {
+    const routes = JSON.parse(localStorage.getItem("routes")) || [];
+    const existingRouteIndex = routes.findIndex(route => route.name === name);
+    if (existingRouteIndex !== -1) {
+        routes[existingRouteIndex].data = data;
+    } else {
+        routes.push({ name, data });
+    }
+    localStorage.setItem("routes", JSON.stringify(routes));
+    window.location.reload(); // Reload the page to show the new route button
+}
+
+function loadSavedRoutes() {
+    const routes = JSON.parse(localStorage.getItem("routes")) || [];
+    savedRoutesContainer.innerHTML = '';
+    routes.forEach(route => {
+        const routeContainer = document.createElement('div');
+        routeContainer.classList.add('route-container');
+        
+        const button = document.createElement('button');
+        button.textContent = route.name;
+        button.classList.add('route-button');  // Class toegevoegd
+        button.addEventListener('click', () => routeUitvoeren(route.data));
+
+        const editButton = document.createElement('button');
+        editButton.textContent = "Bewerken";
+        editButton.classList.add('editbutton');  // Class toegevoegd
+        editButton.addEventListener('click', () => editRoute(route.name));
+
+        routeContainer.appendChild(button);
+        routeContainer.appendChild(editButton);
+        savedRoutesContainer.appendChild(routeContainer);
+    });
+}
 
 
-// if( msg >= 0 && msg <= 50) {
-//     console.log("droog");
-//     client.publish("topic", "motor/plant1");
+function editRoute(name) {
+    const routes = JSON.parse(localStorage.getItem("routes")) || [];
+    const route = routes.find(route => route.name === name);
+    if (route) {
+        routeName = name;
+        route.data = [];
+        isOpnemen = true;
+        startOpnemen.classList.add("hidden");
+        stopOpnemen.classList.remove("hidden");
+        console.log(`Opnemen gestart voor route: ${name}`);
+    }
+}
 
-// }else{
-//     console.log(check);
-//     console.log("nat");
-// }
-
-//      modeToggle.addEventListener("change", function() {
-//     if (modeToggle.checked) {
-//         console.log("Auto");
-//         client.on("message", (topic, message) => {
-//             if (topic === "real_unique_topic_2") {
-//                 const msg = parseInt(message.toString());
-//                 console.log(msg);
-//                 if (msg >= 0 && msg <= 50) {
-//                     console.log("droog");
-//                     client.publish("topic", "motor/plant1");
-    
-//                 } else if (msg > 50 && msg <= 400) {
-//                     console.log("nat");
-//                 }
-//             }
-//         });
-    
-//     } else {
-//         console.log("Manual");
-//     }
-// });
-  
-    var mcVooruit = new Hammer(vooruit);
-    var mcAchteruit = new Hammer(achteruit);
-    var mcLinks = new Hammer(links);
-    var mcRechts = new Hammer(rechts);
-
+var mcVooruit = new Hammer(vooruit);
+var mcAchteruit = new Hammer(achteruit);
+var mcLinks = new Hammer(links);
+var mcRechts = new Hammer(rechts);
+var mcWater = new Hammer(water);
 
   function vooruitf() {
         client.publish("topic", "motor/vooruit");                     
@@ -172,59 +282,39 @@ modeToggle.addEventListener("change", function() {
         console.log("Rechts");
     }
 
-    //mqtt write
-    vooruit.addEventListener("mousedown", vooruitf);
-    vooruit.addEventListener("mouseup", stopf);
-    mcVooruit.on("press", vooruitf);
-    mcVooruit.on("pressup", stopf);
-    achteruit.addEventListener("mousedown", achteruitf);
-    achteruit.addEventListener("mouseup", stopf);
-    mcAchteruit.on("press", achteruitf);
-    mcAchteruit.on("pressup", stopf);
-    links.addEventListener("mousedown", linksf);
-    links.addEventListener("mouseup", stopf);
-    mcLinks.on("press", linksf);
-    mcLinks.on("pressup", stopf);
-    rechts.addEventListener("mousedown", rechtsf);
-    rechts.addEventListener("mouseup", stopf);
-    mcRechts.on("press", rechtsf);
-    mcRechts.on("pressup", stopf);
+function stopf() {
+    client.publish("topic", "motor/stop");
+    console.log("Stop");
+}
+function waterf() {
+    client.publish("topic", "motor/water");
+    console.log("Water");
+}
 
+vooruit.addEventListener("mousedown", () => { vooruitf(); recordAction("vooruit"); });
+vooruit.addEventListener("mouseup", () => { stopf(); recordAction("stop"); });
+mcVooruit.on("press", () => { vooruitf(); recordAction("vooruit"); });
+mcVooruit.on("pressup", () => { stopf(); recordAction("stop"); });
 
+achteruit.addEventListener("mousedown", () => { achteruitf(); recordAction("achteruit"); });
+achteruit.addEventListener("mouseup", () => { stopf(); recordAction("stop"); });
+mcAchteruit.on("press", () => { achteruitf(); recordAction("achteruit"); });
+mcAchteruit.on("pressup", () => { stopf(); recordAction("stop"); });
 
-    
-   
-    // achteruit.addEventListener("mouseup", function() {
-    //     client.publish("topic", "motor/stop");
-    //     console.log("Stop");
-    // }
-    // );
-    // function achteruitf() {
-    //     client.publish("topic", "motor/achteruit");
-    //     console.log("Achteruit");
-    // }
+links.addEventListener("mousedown", () => { linksf(); recordAction("links"); });
+links.addEventListener("mouseup", () => { stopf(); recordAction("stop"); });
+mcLinks.on("press", () => { linksf(); recordAction("links"); });
+mcLinks.on("pressup", () => { stopf(); recordAction("stop"); });
 
-    // links.addEventListener("mousedown", function() {
-    //     client.publish("topic", "motor/links");
-    //     console.log("Links");
-    // }
-    // );
-    // links.addEventListener("mouseup", function() {
-    //     client.publish("topic", "motor/stop");
-    //     console.log("Stop");
-    // }
-    // );
+rechts.addEventListener("mousedown", () => { rechtsf(); recordAction("rechts"); });
+rechts.addEventListener("mouseup", () => { stopf(); recordAction("stop"); });
+mcRechts.on("press", () => { rechtsf(); recordAction("rechts"); });
+mcRechts.on("pressup", () => { stopf(); recordAction("stop"); });
 
-    // rechts.addEventListener("mousedown", function() {
-    //     client.publish("topic", "motor/rechts");
-    //     console.log("Rechts");
-    // }
-    // );
-    // rechts.addEventListener("mouseup", function() {
-    //     client.publish("topic", "motor/stop");
-    //     console.log("Stop");
-    // }
-    // );
+water.addEventListener("mousedown", () => { waterf(); recordAction("water"); });
+water.addEventListener("mouseup", () => { stopf(); recordAction("stop"); });
+mcWater.on("press", () => { waterf(); recordAction("water"); });
+mcWater.on("pressup", () => { stopf(); recordAction("stop"); });
 
     stopp.addEventListener("click", function() {
         client.publish("topic", "motor/stop");
