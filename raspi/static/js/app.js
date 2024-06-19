@@ -202,7 +202,7 @@ function routeUitvoeren(route) {
         setTimeout(executeNextAction, delay);
       } else {
         console.log("Route voltooid");
-        reverseRoute(route); // Reverse the route after completion
+        setTimeout(() => reverseRoute(route), 1000); // Reverse the route after a 1 second delay
       }
     }
   }
@@ -219,7 +219,18 @@ function reverseRoute(route) {
   console.log("Uitvoeren van omgekeerde route:", route);
 
   // Reverse the route array
-  const reversedRoute = [...route].reverse();
+  const reversedRoute = route.slice().reverse();
+
+  // Calculate the reverse timestamps
+  const timeDiffs = route
+    .slice(1)
+    .map((item, index) => route[index + 1].timestamp - route[index].timestamp);
+  const startTime = new Date().getTime();
+  reversedRoute.forEach((item, index) => {
+    item.timestamp =
+      startTime +
+      (index === 0 ? 0 : timeDiffs.slice(0, index).reduce((a, b) => a + b, 0));
+  });
 
   // Map actions to their reverse counterparts
   const reverseActions = {

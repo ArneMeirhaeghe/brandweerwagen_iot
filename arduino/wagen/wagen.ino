@@ -49,8 +49,8 @@ void setup() {
   pinMode(controle, OUTPUT);
 
   // Initialize servo
-  servo1.attach(10);  // links rechts 
-  servo1.write(0);
+  servo1.attach(10);  // links=180 rechts=0 
+  servo1.write(90);
 
   servo2.attach(11); // boven onder 
   servo2.write(90);
