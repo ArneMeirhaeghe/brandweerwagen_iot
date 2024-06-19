@@ -10,7 +10,8 @@
 CRGB leds[NUM_LEDS];
 
 // Servo configuration
-Servo servo; 
+Servo servo1; 
+Servo servo2;
 
 // WiFi and MQTT configuration
 char ssid[] = SECRET_SSID; 
@@ -48,8 +49,11 @@ void setup() {
   pinMode(controle, OUTPUT);
 
   // Initialize servo
-  servo.attach(9);
-  servo.write(90);
+  servo1.attach(10);
+  servo1.write(90);
+
+  servo2.attach(11);
+  servo2.write(90);
 
   // Connect to WiFi
   Serial.print("Attempting to connect to SSID: ");
@@ -106,11 +110,17 @@ void onMqttMessage(int messageSize) {
   int extractedIntValue = 0;
   String extractedStringValue = "";
 
-  if (prefix == "servo") {
+  if (prefix == "servo1") {
     extractedIntValue = value.toInt();
     Serial.print("Extracted Int Value: ");
     Serial.println(extractedIntValue);
-    servo.write(extractedIntValue);
+    servo1.write(extractedIntValue);
+  }else if(prefix== "servo2"){
+  extractedIntValue = value.toInt();
+    Serial.print("Extracted Int Value: ");
+    Serial.println(extractedIntValue);
+    servo2.write(extractedIntValue);
+  
   } else if (prefix == "motor") {
     extractedStringValue = value;
     Serial.print("Extracted String Value: ");
@@ -200,29 +210,29 @@ void spuit() {
   digitalWrite(R1, LOW);
   Serial.println("spuit");
 }
-
 void sirene() {
   static unsigned long previousMillis = 0; 
   static bool sireneState = false; 
   const int interval = 500;
-  const int tenSec = 10000; 
+  const int duration = 5000; 
 
   unsigned long startMillis = millis();
-  unsigned long startMillisLight = startMillis;
+  unsigned long currentMillis;
 
-  redLight();
-
-  while (millis() - startMillis <= tenSec) {
-    if (millis() - startMillisLight >= interval) {
+  while ((currentMillis = millis()) - startMillis <= duration) {
+    if (currentMillis - previousMillis >= interval) {
+      previousMillis = currentMillis;
       if (sireneState) {
         redLight();
       } else {
         blueLight();
       }
       sireneState = !sireneState;
-      startMillisLight = millis();
     }
   }
+
+  // Reset everything after 5 seconds
+  resetLightsAndBuzzer();
 }
 
 void blueLight() {
@@ -244,5 +254,13 @@ void redLight() {
   leds[4] = CRGB::Red;
   leds[5] = CRGB::Red;
   digitalWrite(zoemer, HIGH);
+  FastLED.show();
+}
+
+void resetLightsAndBuzzer() {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = CRGB::Black;
+  }
+  digitalWrite(zoemer, LOW);
   FastLED.show();
 }
