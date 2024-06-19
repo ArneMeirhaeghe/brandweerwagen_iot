@@ -19,6 +19,11 @@ const startOpnemen = document.getElementById("startOpnemen");
 const stopOpnemen = document.getElementById("stopOpnemen");
 const savedRoutesContainer = document.getElementById("savedRoutesContainer");
 
+// Modal Elements
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modalContent");
+const closeModal = document.getElementById("closeModal");
+
 let check = "";
 let msg = 0;
 const controls = document.getElementById("controls");
@@ -327,10 +332,29 @@ function loadSavedRoutes() {
     deleteButton.classList.add("deletebutton");
     deleteButton.addEventListener("click", () => deleteRoute(route.name));
 
+    const showButton = document.createElement("button");
+    showButton.textContent = "Toon Route";
+    showButton.classList.add("showbutton");
+    showButton.addEventListener("click", () => showRoute(route));
+
     routeContainer.appendChild(button);
     routeContainer.appendChild(editButton);
     routeContainer.appendChild(deleteButton);
+    routeContainer.appendChild(showButton);
     savedRoutesContainer.appendChild(routeContainer);
+  });
+}
+
+// Show route in modal
+function showRoute(route) {
+  modal.style.display = "block";
+  modalContent.innerHTML = `
+    <h2>Route: ${route.name}</h2>
+    <pre>${JSON.stringify(route.data, null, 2)}</pre>
+    <button id="closeModal">Close</button>
+  `;
+  document.getElementById("closeModal").addEventListener("click", () => {
+    modal.style.display = "none";
   });
 }
 
@@ -525,3 +549,8 @@ function toggleCheck() {
     controls.classList.remove("hidden");
   }
 }
+
+// Modal close handler
+closeModal.addEventListener("click", () => {
+  modal.style.display = "none";
+});
