@@ -5,18 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head>
 
 <body>
-    <button id="vooruit">vooruit</button>
-    <button id="achteruit">achteruit</button>
-    <button id="links">links</button>
-    <button id="rechts">rechts</button>
-    <button id="stop">stop</button>
-    <button id="sirene">sirene</button>
+    <div class="toggle-container">
+        <input type="checkbox" id="modeToggle" class="toggle-button">
+        <label for="modeToggle" class="toggle-label">
+            <span class="toggle-button-text" value="auto">Auto</span>
+            <span class="toggle-button-text" value="manual">Manual</span>
+        </label>
+    </div>
+    <div class="container" id="controls">
+        <div class="mini__container">
+            <button id="vooruit">vooruit</button>
+            <button id="achteruit">achteruit</button>
+        </div>
+        <div class="mini__container">
+            <button id="links">links</button>
+            <button id="rechts">rechts</button>
+        </div>
+        <div class="mini__container">
+            <button id="stop">stop</button>
+            <button id="sirene">sirene</button>
+        </div>
+        <div class="mini__container">
+            <span id="servoValueDisplay">90</span>
+            <input type="range" id="servoinput" name="servoinput" min="0" max="180" step="10" value="90" />
+        </div>
+        <div class="mini__container">
+            <span id="servoValueDisplay2">90</span>
+            <input type="range" id="servoinput2" name="servoinput2" min="0" max="180" step="10" value="90"
+                class="vertical-slider" />
+        </div>
+    </div>
 
+    <div class="chart">
+        <canvas id="myChart"></canvas>
+    </div>
+    <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-
     <script src="../static/js/app.js"></script>
 </body>
 

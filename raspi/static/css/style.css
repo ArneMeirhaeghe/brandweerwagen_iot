@@ -1,0 +1,133 @@
+/* General styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mini__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+button {
+  width: 10rem;
+  height: 10rem;
+  text-align: center;
+  background-color: #d32f2f;
+  border-radius: 0.5rem;
+  border: solid 0.1rem #ffeb3b;
+  transition: background-color 0.3s, border 0.3s;
+  color: #ffeb3b;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #b71c1c;
+  border: solid 0.3rem #ffeb3b;
+}
+
+button:active {
+  background-color: #9a0007;
+  border: solid 0.5rem #ffeb3b;
+}
+
+.toggle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}
+
+.toggle-button {
+  display: none;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: #cfd8dc;
+  border-radius: 30px;
+  padding: 5px;
+  position: relative;
+  width: 120px;
+  height: 50px;
+  transition: background-color 0.3s;
+}
+
+.toggle-label::before {
+  content: '';
+  position: absolute;
+  background-color: #ffffff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.toggle-button:checked + .toggle-label {
+  background-color: #4caf50;
+}
+
+.toggle-button:checked + .toggle-label::before {
+  transform: translateX(70px);
+}
+
+.toggle-button-text {
+  flex: 1;
+  text-align: center;
+  font-size: 1rem;
+  color: #000;
+}
+
+/* Style for the slider */
+input[type="range"] {
+  width: 100%;
+  margin: 18px 0;
+  position: relative;
+}
+
+
+
+/* Vertical slider */
+.vertical-slider {
+  width: 8.4px;
+  height: 200px;
+  transform: rotate(-90deg);
+}
+
+
+.chart {
+  width: 50vw;
+
+}
+
+canvas {
+  border: 1px solid black;
+  
+
+ 
+}
+.hidden {
+  display: none;
+}
