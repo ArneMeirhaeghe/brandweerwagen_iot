@@ -34,7 +34,43 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 16px; 
+}
+
+.mini__container_controls_left {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 4rem; 
+  margin-bottom: 6rem;
+}
+
+.mini__container_controls_right {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.slider__box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  height: 10rem;
+  padding: 1rem;
+}
+
+.meterz {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+}
+
+.meter {
+  height: 20rem;
+  width: 20rem;
+  margin: 1rem;
 }
 
 .arrow {
@@ -90,6 +126,15 @@ button:hover {
 button:active {
   background-color: #9a0007;
   border: solid 0.5rem #ffeb3b;
+}
+
+/*toggle style*/ 
+.upper__control {
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: bold;
+  width: 7rem;
+  text-align: center;
 }
 
 /* Start opnemen button style */
@@ -169,8 +214,9 @@ button:active {
 .toggle-container {
   display: flex;
   justify-content: center;
+  gap: 2rem;
   align-items: center;
-  margin: 20px;
+  width: 100%;
 }
 
 .toggle-button {
@@ -224,8 +270,6 @@ input[type="range"] {
 
 /* Vertical slider */
 .vertical-slider {
-  width: 8.4px;
-  height: 200px;
   transform: rotate(-90deg);
 }
 
@@ -251,6 +295,30 @@ canvas {
 svg {
   width: 8rem;
   height: 8rem;
+}
+
+/*animations*/
+
+.fuel__arrow {
+  animation: fuel 1s infinite;
+  transform-origin: 50% 58%;
+}
+
+.water__arrow {
+  animation: fuel 2s infinite;
+  transform-origin: 50% 58%;
+}
+
+@keyframes fuel {
+  0% {
+    transform: rotate(-30deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(-30deg);
+  }
 }
 
 @media screen and (max-width: 600px) {
