@@ -2,6 +2,13 @@
 #include <WiFiS3.h>
 #include "wifiSecret.h" // you need to create this file with your own network credentials (in .gitignore)
 #include <Servo.h>
+#include <FastLED.h>
+
+//leds
+#define NUM_LEDS 6
+#define DATA_PIN 9
+// Define the array of leds
+CRGB leds[NUM_LEDS];
 
 Servo servo;  // create servo object to control a servo
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -25,6 +32,7 @@ int R1 = 6;  // pomp --> relay 1
 int zoemer =7;
 int controle =8;
 void setup() {
+    FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);  // GRB ordering is assumed
   //Initialize serial and wait for port to open:
   Serial.begin(9600);
    pinMode(R8, OUTPUT);
@@ -225,11 +233,51 @@ void spuit(){
   digitalWrite(R1, LOW);
   Serial.println("spuit");
 }
-void sirene(){
-    digitalWrite(zoemer,HIGH);
-    delay(1000);
-    digitalWrite(zoemer,LOW);
-    delay(1000);
-    Serial.println("sirene");
+void sirene() {
 
+  static int sireneCount = 0;               // Teller om het aantal sirene-activeringen bij te houden
+  static unsigned long previousMillis = 0;  // Houdt de laatste tijdsmarkering bij
+  static bool sireneState = false;          // Houdt bij of de sirene aan of uit is
+  const int interval = 500;
+  const int tenSec = 10000;  // Interval tussen schakelingen in milliseconden
+
+  unsigned long startMillis = millis();
+  unsigned long startMillisLight = startMillis;
+  redLight();
+  // Controleer of het interval is verstreken
+  if (millis() - startMillis <= tenSec) {
+    //  previousMillis = currentMillis; // Reset de tijdsmarkering
+    if (millis() - startMillisLight >= interval) {
+      if (sireneState) {
+        redLight();
+      } else {
+        blueLight();
+      }
+      sireneState != sireneState;
+      startMillisLight = millis();
+    }
+  }
+}
+
+
+void blueLight() {
+  leds[0] = CRGB::Blue;
+  leds[1] = CRGB::Blue;
+  leds[2] = CRGB::Red;
+  leds[3] = CRGB::Red;
+  leds[4] = CRGB::Blue;
+  leds[5] = CRGB::Blue;
+  digitalWrite(zoemer, LOW);
+  FastLED.show();
+}
+
+void redLight() {
+  leds[0] = CRGB::Red;
+  leds[1] = CRGB::Red;
+  leds[2] = CRGB::Blue;
+  leds[3] = CRGB::Blue;
+  leds[4] = CRGB::Red;
+  leds[5] = CRGB::Red;
+  digitalWrite(zoemer, HIGH);
+  FastLED.show();
 }
