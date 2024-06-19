@@ -1,7 +1,7 @@
 /* General styles */
 body, html {
   margin: 0;
-  padding: 0;
+  padding: 1rem 0 0 0;
   font-family: Arial, sans-serif;
   background-color: #f7f7f7;
   display: flex;
@@ -41,8 +41,8 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 4rem; 
-  margin-bottom: 6rem;
+  gap: 4rem;
+  margin-bottom: 2rem;
 }
 
 .mini__container_controls_right {
@@ -139,21 +139,32 @@ button:active {
 
 /* Start opnemen button style */
 .start-button {
-  background-color: #1976d2;
-  border: solid 0.1rem #64b5f6;
+  background-color: #d32f2f;
+  border: solid 0.1rem #f7f7f7;
+  border-radius: 50%;
+  color: #f7f7f7;
+  font-size: 3rem;
 }
 
 .start-button:hover {
-  background-color: #1565c0;
-  border: solid 0.3rem #64b5f6;
+  background-color: #9a0007;
+  border: solid 0.3rem #f7f7f7;
 }
 
 .start-button:active {
-  background-color: #0d47a1;
-  border: solid 0.5rem #64b5f6;
+  background-color: #9a0007;
+  border: solid 0.3rem #f7f7f7;
 }
 
 /* Auto routes button style */
+.list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 50vw;
+}
+
 .auto-routes-button {
   background-color: #388e3c;
   border: solid 0.1rem #81c784;
@@ -171,16 +182,18 @@ button:active {
 
 /* Route buttons in auto routes section */
 .route-button {
-  width: 8rem;
-  height: 8rem;
-  background-color: #fbc02d;
-  border: solid 0.1rem #fff176;
+  width: 40rem;
+  height: 3rem;
+  background-color: #f7f7f7;
+  border: none;
   color: #000;
+  text-align: start;
+  margin: 1rem 0;
 }
 
 .route-button:hover {
-  background-color: #f9a825;
-  border: solid 0.3rem #fff176;
+  border: none;
+  background-color: #f7f7f7;
 }
 
 .route-button:active {
@@ -190,24 +203,24 @@ button:active {
 
 /* Edit button styles */
 .editbutton {
-  background-color: #4CAF50;
+  background-color: #d32f2f;
   border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
   font-size: 16px;
-  margin: 4px 2px;
   cursor: pointer;
+  height: 3rem;
+  width: 7rem;
+  text-align: center;
+  margin: 1rem 0
 }
 
 .editbutton:hover {
-  background-color: #45a049;
+  background-color: #9a0007;
+  border: none;
 }
 
 .editbutton:active {
-  background-color: #388e3c;
+  background-color: #9a0007;
+  border: none;
 }
 
 /* Toggle switch styles */
@@ -276,6 +289,7 @@ input[type="range"] {
 /* style for the chart */
 .chart {
   width: 50vw;
+  margin: 2rem;
 }
 
 canvas {
