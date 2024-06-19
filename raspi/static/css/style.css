@@ -19,6 +19,17 @@ body, html {
   gap: 16px;
 }
 
+.move {
+  height: 10rem;
+  margin-top: 15rem;
+  position: relative;
+}
+
+#vooruit {
+  top: -11rem;
+  position: absolute;
+}
+
 .mini__container {
   display: flex;
   justify-content: center;
@@ -26,7 +37,37 @@ body, html {
   gap: 16px;
 }
 
+.arrow {
+  border: solid #ffeb3b;
+  border-width: 0 1rem 1rem 0;
+  display: inline-block;
+  padding: 1rem;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+ 
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+
 /* General button styles */
+
+
 button {
   width: 10rem;
   height: 10rem;
@@ -199,4 +240,51 @@ canvas {
 
 .hidden {
   display: none;
+}
+
+#stop, #sirene, #water {
+  
+  width: 10rem;
+  height: 10rem;
+}
+
+svg {
+  width: 8rem;
+  height: 8rem;
+}
+
+@media screen and (max-width: 600px) {
+  .buttons {
+    display: flex;
+    max-width: 80%;
+    flex-direction: column;
+    gap: 16px;
+  }
+  button {
+    width: 5rem;
+    height: 5rem;
+  }
+  #stop, #sirene, #water {
+  
+    width: 5rem;
+    height: 5rem;
+  }
+  
+  svg {
+    width: 4rem;
+    height: 4rem;
+  }
+  #vooruit {
+    top: -4rem;
+    position: absolute;
+  }
+  .mini__container {
+    max-width: 100%;
+  }
+  .chart {
+    width: 100%;
+  }
+  .move {
+    margin-top: 8rem;
+  }
 }
