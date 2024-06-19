@@ -8,6 +8,7 @@ const links = document.getElementById("links");
 const rechts = document.getElementById("rechts");
 const stopp = document.getElementById("stop");
 const sirene = document.getElementById("sirene");
+const water = document.getElementById("water");
 const servoInput = document.getElementById("servoinput");
 const servoInput2 = document.getElementById("servoinput2");
 const servoValueDisplay = document.getElementById("servoValueDisplay");
@@ -246,6 +247,7 @@ var mcVooruit = new Hammer(vooruit);
 var mcAchteruit = new Hammer(achteruit);
 var mcLinks = new Hammer(links);
 var mcRechts = new Hammer(rechts);
+var mcWater = new Hammer(water);
 
 function vooruitf() {
     client.publish("topic", "motor/vooruit");
@@ -271,6 +273,10 @@ function stopf() {
     client.publish("topic", "motor/stop");
     console.log("Stop");
 }
+function waterf() {
+    client.publish("topic", "motor/water");
+    console.log("Water");
+}
 
 vooruit.addEventListener("mousedown", () => { vooruitf(); recordAction("vooruit"); });
 vooruit.addEventListener("mouseup", () => { stopf(); recordAction("stop"); });
@@ -291,6 +297,11 @@ rechts.addEventListener("mousedown", () => { rechtsf(); recordAction("rechts"); 
 rechts.addEventListener("mouseup", () => { stopf(); recordAction("stop"); });
 mcRechts.on("press", () => { rechtsf(); recordAction("rechts"); });
 mcRechts.on("pressup", () => { stopf(); recordAction("stop"); });
+
+water.addEventListener("mousedown", () => { waterf(); recordAction("water"); });
+water.addEventListener("mouseup", () => { stopf(); recordAction("stop"); });
+mcWater.on("press", () => { waterf(); recordAction("water"); });
+mcWater.on("pressup", () => { stopf(); recordAction("stop"); });
 
 stopp.addEventListener("click", function() {
     client.publish("topic", "motor/stop");

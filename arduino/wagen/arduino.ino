@@ -160,6 +160,13 @@ void onMqttMessage(int messageSize) {
     Serial.println("Executing sirene");
     sirene();
   }
+  else if (extractedStringValue == "water") {
+    Serial.println("Executing spuit");
+    spuit();
+  }
+  else {
+    Serial.println("Unknown command");
+  }
   Serial.println();
 }
   }
