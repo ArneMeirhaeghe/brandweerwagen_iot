@@ -311,8 +311,14 @@ function loadSavedRoutes() {
     editButton.classList.add("editbutton");
     editButton.addEventListener("click", () => editRoute(route.name));
 
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Verwijderen";
+    deleteButton.classList.add("deletebutton");
+    deleteButton.addEventListener("click", () => deleteRoute(route.name));
+
     routeContainer.appendChild(button);
     routeContainer.appendChild(editButton);
+    routeContainer.appendChild(deleteButton);
     savedRoutesContainer.appendChild(routeContainer);
   });
 }
@@ -329,6 +335,14 @@ function editRoute(name) {
     stopOpnemen.classList.remove("hidden");
     console.log(`Opnemen gestart voor route: ${name}`);
   }
+}
+
+// Delete a route
+function deleteRoute(name) {
+  const routes = JSON.parse(localStorage.getItem("routes")) || [];
+  const updatedRoutes = routes.filter((route) => route.name !== name);
+  localStorage.setItem("routes", JSON.stringify(updatedRoutes));
+  window.location.reload(); // Reload the page to update the UI
 }
 
 // Hammer.js instance for touch controls
