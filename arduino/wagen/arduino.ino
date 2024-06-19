@@ -160,6 +160,14 @@ void onMqttMessage(int messageSize) {
     Serial.println("Executing sirene");
     sirene();
   }
+  else if (extractedStringValue == "water") {
+    Serial.println("Executing spuit");
+    spuit();
+  }
+  else {
+    Serial.println("Unknown command");
+  }
+ 
   Serial.println();
 }
   }
@@ -178,15 +186,13 @@ void rechtsachteruit(){
   digitalWrite(R5, HIGH);
 }
 void rechtsvooruit(){
-digitalWrite(R6, HIGH);
+  digitalWrite(R6, HIGH);
   digitalWrite(R5, LOW);
 }
 void linksvooruit(){
      digitalWrite(R8, LOW);  
   digitalWrite(R7, HIGH);
-}
-
- 
+} 
 void stop() {
   digitalWrite(R8, LOW); 
   digitalWrite(R7, LOW);
@@ -195,13 +201,13 @@ void stop() {
   Serial.println("STOP");
 }
 void vooruit() {
-rechtsvooruit();
-linksvooruit();
+  rechtsvooruit();
+  linksvooruit();
   Serial.println("vooruit");
 }
 void achteruit() {
-rechtsachteruit();
-linksachteruit();
+  rechtsachteruit();
+  linksachteruit();
   Serial.println("achteruit");
 }
 void links(){
@@ -209,7 +215,7 @@ void links(){
   Serial.println("links");
 }
 void rechts(){
-linksvooruit();
+  linksvooruit();
 
   Serial.println("rechts");
 }
