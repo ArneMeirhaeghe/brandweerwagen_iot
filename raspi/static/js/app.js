@@ -36,9 +36,11 @@ client.on("connect", () => {
   });
 });
 
-// Graph
+// Initialize Chart on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", (event) => {
   toggleCheck();
+
+  // Initialize chart
   const ctx = document.getElementById("myChart").getContext("2d");
   const vochtigheidData = {
     labels: [],
@@ -79,6 +81,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     },
   });
 
+  // Function to add humidity data to chart
   function voegVochtigheidToe(waarde) {
     const tijdstip = new Date();
     vochtigheidGrafiek.data.labels.push(tijdstip);
@@ -86,6 +89,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     vochtigheidGrafiek.update();
   }
 
+  // MQTT message handler
   client.on("message", (topic, message) => {
     if (topic === "real_unique_topic_2") {
       msg = parseInt(message.toString());
@@ -107,10 +111,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
   loadSavedRoutes();
 });
 
+// Toggle between auto and manual mode
 modeToggle.addEventListener("change", function () {
   toggleCheck();
 });
 
+// Event listeners for route recording buttons
 startOpnemen.addEventListener("click", () => {
   routeName = prompt("Geef een naam voor de route:");
   if (routeName) {
@@ -119,6 +125,7 @@ startOpnemen.addEventListener("click", () => {
 });
 stopOpnemen.addEventListener("click", stopRouteOpnemen);
 
+// Start route recording
 function startRouteOpnemen() {
   isOpnemen = true;
   route = [];
@@ -128,6 +135,7 @@ function startRouteOpnemen() {
   console.log("Opnemen gestart");
 }
 
+// Stop route recording and save the route
 function stopRouteOpnemen() {
   isOpnemen = false;
   startOpnemen.classList.remove("hidden");
@@ -139,6 +147,7 @@ function stopRouteOpnemen() {
   console.log("Opgenomen route:", route);
 }
 
+// Record actions with timestamps
 function recordAction(action) {
   if (isOpnemen && action !== lastAction) {
     const timestamp = new Date().getTime();
@@ -147,6 +156,7 @@ function recordAction(action) {
   }
 }
 
+// Execute a recorded route
 function routeUitvoeren(route) {
   if (route.length === 0) {
     console.log("Geen route opgenomen");
@@ -180,6 +190,9 @@ function routeUitvoeren(route) {
         case "sirene":
           sirene.click();
           break;
+        case "water":
+          waterf();
+          break;
       }
 
       index++;
@@ -189,6 +202,7 @@ function routeUitvoeren(route) {
         setTimeout(executeNextAction, delay);
       } else {
         console.log("Route voltooid");
+        reverseRoute(route); // Reverse the route after completion
       }
     }
   }
@@ -196,6 +210,77 @@ function routeUitvoeren(route) {
   executeNextAction();
 }
 
+// Execute the route in reverse
+function reverseRoute(route) {
+  if (route.length === 0) {
+    console.log("Geen route opgenomen");
+    return;
+  }
+  console.log("Uitvoeren van omgekeerde route:", route);
+
+  // Reverse the route array
+  const reversedRoute = [...route].reverse();
+
+  // Map actions to their reverse counterparts
+  const reverseActions = {
+    vooruit: "achteruit",
+    achteruit: "vooruit",
+    links: "rechts",
+    rechts: "links",
+    water: "water", // Assuming water action does not have a reverse
+    sirene: "sirene", // Assuming sirene action does not have a reverse
+  };
+
+  let index = 0;
+
+  function executeNextAction() {
+    if (index < reversedRoute.length) {
+      let { action, timestamp } = reversedRoute[index];
+      action = reverseActions[action] || action; // Get the reverse action if it exists
+
+      console.log("Uitvoeren omgekeerde actie:", action);
+
+      switch (action) {
+        case "vooruit":
+          vooruitf();
+          break;
+        case "achteruit":
+          achteruitf();
+          break;
+        case "links":
+          linksf();
+          break;
+        case "rechts":
+          rechtsf();
+          break;
+        case "stop":
+          stopf();
+          break;
+        case "sirene":
+          sirene.click();
+          break;
+        case "water":
+          waterf();
+          break;
+      }
+
+      index++;
+      if (index < reversedRoute.length) {
+        const nextTimestamp = reversedRoute[index].timestamp;
+        const delay = nextTimestamp - timestamp;
+        setTimeout(executeNextAction, delay);
+      } else {
+        console.log("Omgekeerde route voltooid");
+        // Reset the car state if needed
+        stopf();
+      }
+    }
+  }
+
+  executeNextAction();
+}
+
+// Save route to localStorage
 function saveRoute(name, data) {
   const routes = JSON.parse(localStorage.getItem("routes")) || [];
   const existingRouteIndex = routes.findIndex((route) => route.name === name);
@@ -208,6 +293,7 @@ function saveRoute(name, data) {
   window.location.reload(); // Reload the page to show the new route button
 }
 
+// Load saved routes from localStorage
 function loadSavedRoutes() {
   const routes = JSON.parse(localStorage.getItem("routes")) || [];
   savedRoutesContainer.innerHTML = "";
@@ -217,12 +303,12 @@ function loadSavedRoutes() {
 
     const button = document.createElement("button");
     button.textContent = route.name;
-    button.classList.add("route-button"); // Class toegevoegd
+    button.classList.add("route-button");
     button.addEventListener("click", () => routeUitvoeren(route.data));
 
     const editButton = document.createElement("button");
     editButton.textContent = "Bewerken";
-    editButton.classList.add("editbutton"); // Class toegevoegd
+    editButton.classList.add("editbutton");
     editButton.addEventListener("click", () => editRoute(route.name));
 
     routeContainer.appendChild(button);
@@ -231,6 +317,7 @@ function loadSavedRoutes() {
   });
 }
 
+// Edit an existing route
 function editRoute(name) {
   const routes = JSON.parse(localStorage.getItem("routes")) || [];
   const route = routes.find((route) => route.name === name);
@@ -244,12 +331,14 @@ function editRoute(name) {
   }
 }
 
+// Hammer.js instance for touch controls
 var mcVooruit = new Hammer(vooruit);
 var mcAchteruit = new Hammer(achteruit);
 var mcLinks = new Hammer(links);
 var mcRechts = new Hammer(rechts);
 var mcWater = new Hammer(water);
 
+// Functions to send MQTT commands for each action
 function vooruitf() {
   client.publish("topic", "motor/vooruit");
   console.log("Vooruit");
@@ -274,11 +363,13 @@ function stopf() {
   client.publish("topic", "motor/stop");
   console.log("Stop");
 }
+
 function waterf() {
   client.publish("topic", "motor/water");
   console.log("Water");
 }
 
+// Event listeners for mouse and touch controls
 vooruit.addEventListener("mousedown", () => {
   vooruitf();
   recordAction("vooruit");
@@ -376,13 +467,14 @@ sirene.addEventListener("click", function () {
   recordAction("sirene");
 });
 
+// Event listeners for servo inputs
 servoInput.addEventListener("input", function () {
   const servoValue = parseInt(servoInput.value);
   if (servoValue >= 0 && servoValue <= 180) {
     client.publish("topic", `servo1/${servoValue}`);
     console.log(servoValue);
     servoValueDisplay.textContent = servoValue;
-    recordAction(`servo/${servoValue}`);
+    recordAction(`servo1/${servoValue}`);
   }
 });
 
@@ -392,10 +484,11 @@ servoInput2.addEventListener("input", function () {
     client.publish("topic", `servo2/${servoValue2}`);
     console.log(servoValue2);
     servoValueDisplay2.textContent = servoValue2;
-    recordAction(`servo/${servoValue2}`);
+    recordAction(`servo2/${servoValue2}`);
   }
 });
 
+// Toggle between auto and manual mode
 function toggleCheck() {
   if (modeToggle.checked) {
     check = "auto";

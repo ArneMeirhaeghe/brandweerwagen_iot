@@ -49,10 +49,10 @@ void setup() {
   pinMode(controle, OUTPUT);
 
   // Initialize servo
-  servo1.attach(10);
-  servo1.write(90);
+  servo1.attach(10);  // links rechts 
+  servo1.write(0);
 
-  servo2.attach(11);
+  servo2.attach(11); // boven onder 
   servo2.write(90);
 
   // Connect to WiFi
