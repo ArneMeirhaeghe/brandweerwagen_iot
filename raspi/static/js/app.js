@@ -366,13 +366,34 @@ function loadSavedRoutes() {
 }
 
 // Show route in modal
+// function showRoute(route) {
+//   console.log("Toon route:", route)
+//   console.log("Toon route:", route.data)
+//   modal.style.display = "block";
+//   modalContent.innerHTML = `
+//     <h2>Route: ${route.name}</h2>
+//     <pre>${JSON.stringify(route.data, null, 2)}</pre>
+//     <button id="closeModal">Close</button>
+//   `;
+//   document.getElementById("closeModal").addEventListener("click", () => {
+//     modal.style.display = "none";
+//   });
+// }
+
 function showRoute(route) {
+  // Extract actions from route.data, excluding "stop" actions
+  const actions = route.data
+    .filter(item => item.action !== "stop")
+    .map(item => item.action)
+    .join('\n');
+
   modal.style.display = "block";
   modalContent.innerHTML = `
     <h2>Route: ${route.name}</h2>
-    <pre>${JSON.stringify(route.data, null, 2)}</pre>
+    <pre class="pre-styled">${actions}</pre>
     <button id="closeModal">Close</button>
   `;
+  
   document.getElementById("closeModal").addEventListener("click", () => {
     modal.style.display = "none";
   });
