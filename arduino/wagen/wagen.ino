@@ -4,6 +4,7 @@
 #include <Servo.h>
 #include <FastLED.h>
 
+
 // LEDs configuration
 #define NUM_LEDS 6
 #define DATA_PIN 9
@@ -60,7 +61,7 @@ void setup() {
   Serial.println(ssid);
   while (WiFi.begin(ssid, pass) != WL_CONNECTED) {
     Serial.print(".");
-    delay(5000);
+    delay(2000);
   }
   Serial.println("You're connected to the network");
 
@@ -179,6 +180,9 @@ void stop() {
   digitalWrite(R7, LOW);
   digitalWrite(R6, LOW);
   digitalWrite(R5, LOW);
+  digitalWrite(R1, LOW);
+  digitalWrite(zoemer,LOW);
+  
   Serial.println("STOP");
 }
 
@@ -206,8 +210,6 @@ void rechts() {
 
 void spuit() {
   digitalWrite(R1, HIGH);
-  delay(2000);
-  digitalWrite(R1, LOW);
   Serial.println("spuit");
 }
 void sirene() {
