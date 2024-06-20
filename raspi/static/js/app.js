@@ -18,6 +18,7 @@ const ctx = document.getElementById("myChart");
 const startOpnemen = document.getElementById("startOpnemen");
 const stopOpnemen = document.getElementById("stopOpnemen");
 const savedRoutesContainer = document.getElementById("savedRoutesContainer");
+const dropImage = document.getElementById("dropImage");
 
 // Modal Elements
 const modal = document.getElementById("modal");
@@ -102,13 +103,32 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
       if (check == "auto" && msg <= 50) {
         client.publish("topic", "motor/plant1");
+        if(msg<25){
+          dropImage.classList.add("blink");
+          dropImage.classList.remove("dropGone");
+        }else{
+          dropImage.classList.remove("blink");
+          dropImage.classList.remove("dropGone");
+        }
         console.log("auto + droog");
       } else if (check == "auto" && msg > 50) {
         console.log("auto + nat");
+        dropImage.classList.remove("blink");
+        dropImage.classList.add("dropGone")
+        
       } else if (check == "manual" && msg <= 50) {
         console.log("manual + droog");
+        if(msg<25){
+          dropImage.classList.add("blink");
+          dropImage.classList.remove("dropGone");
+        }else{
+          dropImage.classList.remove("blink");
+          dropImage.classList.remove("dropGone");
+        }
       } else if (check == "manual" && msg > 50) {
         console.log("manual + nat");
+        dropImage.classList.remove("blink");
+        dropImage.classList.add("dropGone")
       }
     }
   });

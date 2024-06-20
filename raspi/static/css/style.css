@@ -2,7 +2,7 @@
 body,
 html {
   margin: 0;
-  padding: 1rem 0 0 0;
+  padding: 0;
   font-family: Arial, sans-serif;
   background-color: #f7f7f7;
   display: flex;
@@ -181,18 +181,20 @@ button:active {
 
 /* Route buttons in auto routes section */
 .route-button {
-  width: 40rem;
+  width: 30rem;
   height: 3rem;
-  background-color: #f7f7f7;
   border: none;
-  color: #000;
   text-align: start;
   margin: 1rem 0;
+  background-color: #b71c1c;
+  color: #ffeb3b;
+  padding-left: 1rem;
+  text-transform: uppercase;
 }
 
 .route-button:hover {
   border: none;
-  background-color: #f7f7f7;
+  background-color: #9a0007;
 }
 
 .route-button:active {
@@ -202,7 +204,55 @@ button:active {
 
 /* Edit button styles */
 .editbutton {
-  background-color: #d32f2f;
+  background-color: #f7f7f7;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  height: 3rem;
+  width: 7rem;
+  text-align: center;
+  margin: 1rem 0;
+  color: #9a0007;
+  text-decoration: underline;
+}
+
+.editbutton:hover {
+  background-color: #f7f7f7;
+  border: none;
+}
+
+.editbutton:active {
+  background-color: #9a0007;
+  border: none;
+}
+
+.deletebutton {
+  background-color: #f7f7f7;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  height: 3rem;
+  width: 7rem;
+  text-align: center;
+  margin: 1rem 0;
+  color: #9a0007;
+  text-decoration: underline;
+}
+
+.deletebutton:hover {
+  background-color: #f7f7f7;
+  border: none;
+}
+
+.deletebutton:active {
+  background-color: #9a0007;
+  border: none;
+}
+
+.showbutton {
+  background-color: #f7f7f7;
+  color: #9a0007;
+  text-decoration: underline;
   border: none;
   font-size: 16px;
   cursor: pointer;
@@ -212,14 +262,58 @@ button:active {
   margin: 1rem 0;
 }
 
-.editbutton:hover {
+.showbutton:hover {
+  background-color: #f7f7f7;
+  border: none;
+}
+
+.showbutton:active {
   background-color: #9a0007;
   border: none;
 }
 
-.editbutton:active {
-  background-color: #9a0007;
+#closeModal {
+  background-color: white;
+  color: #9a0007;
+  text-decoration: underline;
   border: none;
+  font-size: 16px;
+  cursor: pointer;
+  height: 3rem;
+  width: 7rem;
+  text-align: center;
+}
+
+.route-container {
+  display: flex;
+  gap: 1rem
+}
+
+.thirsty {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+}
+
+.dropGone {
+  display: none;
+}
+
+.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+
+@keyframes blink-animation {
+  to {
+      visibility: hidden;
+  }
+}
+
+@-webkit-keyframes blink-animation {
+  to {
+      visibility: hidden;
+  }
 }
 
 /* Toggle switch styles */
@@ -229,6 +323,7 @@ button:active {
   gap: 2rem;
   align-items: center;
   width: 100%;
+  margin-top: 1rem;
 }
 
 .toggle-button {
@@ -263,7 +358,7 @@ button:active {
 }
 
 .toggle-button:checked + .toggle-label::before {
-  transform: translateX(70px);
+  transform: translateX(78px);
 }
 
 .toggle-button-text {
@@ -335,42 +430,6 @@ svg {
   }
 }
 
-@media screen and (max-width: 600px) {
-  .buttons {
-    display: flex;
-    max-width: 80%;
-    flex-direction: column;
-    gap: 16px;
-  }
-  button {
-    width: 5rem;
-    height: 5rem;
-  }
-  #stop,
-  #sirene,
-  #water {
-    width: 5rem;
-    height: 5rem;
-  }
-
-  svg {
-    width: 4rem;
-    height: 4rem;
-  }
-  #vooruit {
-    top: -4rem;
-    position: absolute;
-  }
-  .mini__container {
-    max-width: 100%;
-  }
-  .chart {
-    width: 100%;
-  }
-  .move {
-    margin-top: 8rem;
-  }
-}
 /* Add this to your CSS file */
 .modal {
   display: none; /* Hidden by default */
@@ -406,3 +465,173 @@ svg {
   text-decoration: none;
   cursor: pointer;
 }
+
+.portrait-message {
+  display: none;
+}
+
+@media screen and (max-width: 1200px) and (orientation: portrait){
+
+  .phone-mode {
+    display: none;
+  }
+
+  .portrait-message {
+    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .rotate {
+    width: 80vw;
+    height: 100%;
+  }
+}
+
+@media screen and (max-width: 1200px) and (orientation: landscape) {
+  .container {
+    display: flex;
+  }
+
+  .portrait-message {
+    display: none;
+  }
+
+  html {
+    padding: 0;
+  }
+
+  .upper__control {
+    font-size: 1rem;
+    width: 5rem;
+  }
+
+  .toggle-label {
+    width: 4rem;
+    height: 1.5rem;
+  }
+
+  .toggle-label::before {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .start-button {
+    width: 5rem;
+    height: 5rem;
+    font-size: 1rem;
+  }
+
+  .meter {
+    height: 4rem;
+    width: 4rem;
+    margin: 1rem;
+  }
+
+  button {
+    width: 5rem;
+    height: 5rem;
+    font-size: 0.5rem;
+  }
+
+  .move {
+    height: 5rem;
+    margin-top: 6rem;
+    position: relative;
+  }
+
+  .arrow {
+    border: solid #ffeb3b;
+    border-width: 0 0.5rem 0.5rem 0;
+    display: inline-block;
+    padding: 0.5rem;
+  }
+  
+  #vooruit {
+    top: -6rem;
+    position: absolute;
+  }
+
+  svg {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  #stop {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  #sirene {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  #water {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .slider__box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    height: 5rem;
+    padding: 0.5rem;
+  }
+
+  .mini__container_controls_right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #servoinput {
+    width: 5rem;
+  }
+
+  #servoinput2 {
+    width: 5rem;
+  }
+
+  .thirsty {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+  }
+  
+  .route-button {
+    width: 10rem;
+    height: 3rem;
+    font-size: 1rem;
+    text-transform: lowercase;
+  }
+
+  .editbutton {
+    width: 6rem;
+    height: 3rem;
+    font-size: 1rem;
+  }
+
+  .deletebutton {
+    width: 6rem;
+    height: 3rem;
+    font-size: 1rem;
+  }
+
+  .showbutton {
+    width: 6rem;
+    height: 3rem;
+    font-size: 1rem;
+  }
+
+  .toggle-button:checked + .toggle-label::before {
+    transform: translateX(45px);
+  }
+}
+
